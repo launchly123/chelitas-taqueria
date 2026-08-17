@@ -1,0 +1,174 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ * Chelita's Taqueria — design tokens
+ *
+ * Warm, earthy, appetising. The palette is masa/cream and espresso first;
+ * terracotta and olive are supporting; chili red is an ACCENT and never a
+ * large surface. No flags, no sombreros, no cantina clichés — the warmth
+ * comes from the paper tones and the photography, not from decoration.
+ * ------------------------------------------------------------------ */
+
+@theme {
+  /* Surfaces — warm neutrals */
+  --color-masa: #f5ece0; /* tortilla cream — primary light surface */
+  --color-masa-2: #ece0cf;
+  --color-masa-3: #dfd0ba;
+  --color-espresso: #211812; /* deep roast — primary dark surface */
+  --color-espresso-2: #2f231a;
+  --color-espresso-3: #433327;
+
+  /* Earth accents */
+  --color-terracotta: #b0653f;
+  --color-brown: #6d4a31;
+  --color-olive: #656b41;
+
+  /* Chili — the single hot accent */
+  --color-chili: #a62b21;
+  --color-chili-700: #8a221a;
+  --color-chili-300: #e0836f; /* accent text on espresso — 6.1:1 */
+
+  /* Text */
+  --color-ink-mute: #6d5a4a; /* muted on masa   — 5.4:1 */
+  --color-cream-mute: #bda891; /* muted on espresso — 7.9:1 */
+
+  /* Type */
+  --font-sans: var(--font-archivo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, SFMono-Regular, monospace;
+
+  /* Motion */
+  --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+/* ------------------------------------------------------------------ *
+ * Base
+ * ------------------------------------------------------------------ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--color-masa);
+    color: var(--color-espresso);
+    font-family: var(--font-sans);
+    font-synthesis-weight: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    /* Nothing on this page may cause a horizontal scrollbar. */
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background-color: var(--color-chili);
+    color: #fff;
+  }
+
+  /* Visible, on-brand focus ring on every interactive element. */
+  :focus-visible {
+    outline: 2px solid var(--color-chili);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* On dark surfaces the chili ring is too low-contrast — lighten it. */
+  .on-espresso :focus-visible {
+    outline-color: var(--color-chili-300);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  img {
+    max-width: 100%;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ * Utilities
+ * ------------------------------------------------------------------ */
+
+@utility eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+/* A hand-inked underline that sits under a word without looking like a
+   template's border-bottom. Two offset strokes, deliberately imperfect. */
+@utility ink-underline {
+  background-image: linear-gradient(
+    to right,
+    var(--color-chili) 0%,
+    var(--color-chili) 100%
+  );
+  background-repeat: no-repeat;
+  background-size: 100% 2px;
+  background-position: 0 92%;
+  padding-bottom: 0.08em;
+}
+
+/* Paper grain. A single inline SVG turbulence, tiled — no image request. */
+@utility grain {
+  position: relative;
+}
+
+@utility grain-layer {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* ------------------------------------------------------------------ *
+ * Scroll reveals
+ *
+ * The hidden state is opt-IN: it only applies once the inline gate script in
+ * layout.tsx has added `.js-reveal` to <html>, which it does only when the
+ * animation is certain to be able to finish (tab visible, motion allowed).
+ * A background tab, a no-JS load, or reduced-motion therefore renders every
+ * section fully visible rather than frozen at opacity:0 — a blank page has
+ * shipped to production this way before and it reads as a broken deploy.
+ *
+ * `:not([data-reveal="in"])` rather than a bare `[data-reveal]` because the
+ * two selectors have equal specificity and the revealed state would otherwise
+ * be at the mercy of source order.
+ * ------------------------------------------------------------------ */
+
+@layer components {
+  .js-reveal [data-reveal]:not([data-reveal="in"]) {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  [data-reveal] {
+    transition:
+      opacity 0.75s var(--ease-out-soft),
+      transform 0.75s var(--ease-out-soft);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-reveal] {
+      transition: none;
+    }
+  }
+}
