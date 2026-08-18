@@ -1,7 +1,7 @@
 # Chelita's Taqueria
 
 Website concept for Chelita's Taqueria — a family-owned Mexican taco truck in
-Fresno, California. Built by Launchly.
+Fresno, California. Built by Lunora.
 
 > **Read [VERIFY.md](./VERIFY.md) first.** Public listings for this business
 > contradict each other, including on whether it is currently trading. The site
@@ -46,7 +46,7 @@ npm run build
   `.js-reveal` class set before paint, and only when the animation can finish
   (tab visible, motion allowed). A background tab or a no-JS load renders the
   page fully visible. This exact bug once shipped a blank page to production on
-  another Launchly site.
+  another Lunora site.
 
 ## Accessibility
 

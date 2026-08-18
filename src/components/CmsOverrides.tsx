@@ -3,7 +3,7 @@
 import * as React from "react";
 
 /**
- * Applies text/image edits made in the Launchly Agency Console to this page.
+ * Applies text/image edits made in the Lunora Agency Console to this page.
  *
  * The console's visual editor loads this site's real HTML in an iframe and
  * keys every editable node by its position in document order — text leaves
